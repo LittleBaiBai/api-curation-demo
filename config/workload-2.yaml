@@ -27,7 +27,7 @@ spec:
         description: Manage employee profiles
   source:
     git:
-      url: https://github.com/spring-cloud-services-samples/api-curation-demo.git
+      url: https://github.com/LittleBaiBai/api-curation-demo.git
       ref:
         branch: main
   serviceClaims:
