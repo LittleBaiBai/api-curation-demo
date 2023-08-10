@@ -39,7 +39,7 @@ import jakarta.validation.Valid;
                 name = "Customer Profile REST API"))
 @CrossOrigin
 @RestController
-@RequestMapping("/api/customer-profiles")
+@RequestMapping("/v1")
 public class CustomerProfileController {
 
     private final CustomerProfileService service;
