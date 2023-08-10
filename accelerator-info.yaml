@@ -1,0 +1,55 @@
+id: 2ea23a34-0c18-4b83-8ec5-fb756a92cd49
+timestamp: 2023-08-10T20:16:38Z
+username: guest
+source: TAP-GUI
+accelerator:
+  name: java-rest-service
+  source:
+    image: registry.tanzu.vmware.com/tanzu-application-platform/tap-packages@sha256:5fe7379aaa193125f7ffa11c196ab7dd4f1650a87ab4712603a51912ba108cb4
+fragments:
+  - name: testcontainers-mysql
+    source:
+      image: registry.tanzu.vmware.com/tanzu-application-platform/tap-packages@sha256:542ce560d8dc1e4d206b2fe0eeb9c7fbf9d9ff71ea1b539f93c8a443eb8012cc
+  - name: testcontainers-postgresql
+    source:
+      image: registry.tanzu.vmware.com/tanzu-application-platform/tap-packages@sha256:cbe92d01ec663352f04c03ee9d3beee23a66b3a1464c03e5ade23a878ba2228d
+  - name: build-wrapper-maven
+    source:
+      image: registry.tanzu.vmware.com/tanzu-application-platform/tap-packages@sha256:195a3ca6585fa91c41292584a19c2807c72ecdf986ce860a7147451e89d467d4
+  - name: spring-boot-mysql
+    source:
+      image: registry.tanzu.vmware.com/tanzu-application-platform/tap-packages@sha256:b2a55c05ace0355f361dc34d7ee7216540d23d6bb88246d07a55bae0cb79accf
+  - name: spring-boot-postgresql
+    source:
+      image: registry.tanzu.vmware.com/tanzu-application-platform/tap-packages@sha256:6893cbb1d7bc2be3c7746e6409e3fe0cb89cad8cc1eb4478aeb5664f31561ae0
+  - name: spring-boot-database
+    source:
+      image: registry.tanzu.vmware.com/tanzu-application-platform/tap-packages@sha256:2c6283602cb7a76b2e1112756e9482184e51b3c020b604376229a3b8463916a2
+  - name: tap-workload
+    source:
+      image: registry.tanzu.vmware.com/tanzu-application-platform/tap-packages@sha256:d9c7d8d322f0740666ba7c752a9174d1eb66274338c4f0e211edb1d448104c2a
+  - name: live-update
+    source:
+      image: registry.tanzu.vmware.com/tanzu-application-platform/tap-packages@sha256:be3267c573d59a667fd0c89bb83149921c1836b119e974a2276b76d96b4e2e0f
+  - name: spring-boot-h2
+    source:
+      image: registry.tanzu.vmware.com/tanzu-application-platform/tap-packages@sha256:48928e44fb611188263ccc2caf113ad5252fa2590a33df44040dfa82179f98fd
+  - name: build-wrapper-gradle
+    source:
+      image: registry.tanzu.vmware.com/tanzu-application-platform/tap-packages@sha256:5480259d6a29a11f0cc482cd304501d74ccd89dd7207f2d639d6f0d8eedc3bf8
+options:
+  apiDescription: Manage customer profiles
+  apiOwner: customer-relations-department
+  apiSystem: profile-management
+  artifactId: customer-profile
+  buildTool: maven
+  databaseIntegrationTestType: testcontainers
+  databaseMigrationTool: flyway
+  databaseName: customer-database
+  databaseType: postgres
+  exposeOpenAPIEndpoint: true
+  groupId: com.example
+  includeBuildToolWrapper: true
+  liveUpdateIDESupport: false
+  packageName: com.example.customerprofile
+  projectName: java-rest-service-1
