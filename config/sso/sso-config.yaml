@@ -1,0 +1,88 @@
+---
+apiVersion: secretgen.k14s.io/v1alpha1
+kind: RSAKey
+metadata:
+  name: my-token-signing-key
+  namespace: appsso
+spec: { }
+---
+apiVersion: secretgen.k14s.io/v1alpha1
+kind: RSAKey
+metadata:
+  name: my-token-verification-key
+  namespace: appsso
+spec: { }
+---
+apiVersion: sso.apps.tanzu.vmware.com/v1alpha1
+kind: AuthServer
+metadata:
+  name: authserver
+  namespace: appsso
+  labels:
+    name: authserver
+  annotations:
+    sso.apps.tanzu.vmware.com/allow-unsafe-issuer-uri: "true"
+    sso.apps.tanzu.vmware.com/allow-unsafe-identity-provider: "true"
+    sso.apps.tanzu.vmware.com/allow-client-namespaces: "*"
+spec:
+  replicas: 1
+  server: http://appsso.appsso
+  identityProviders:
+    - name: internal
+      internalUnsafe:
+        users:
+          - username: "alice"
+            password: "{bcrypt}$2a$10$FKC5icCWPYwuzvYVyzxkt.W.0FTlP3lqzsR5m9ijJaxKfxJR8ff7q" #! "test"
+            claims:
+              givenName: "alice"
+              familyName: "scg"
+            roles:
+              - "openid"
+              - "profile"
+  tokenSignature:
+    signAndVerifyKeyRef:
+      name: my-token-signing-key
+    extraVerifyKeyRefs:
+      - name: my-token-verification-key
+---
+apiVersion: sso.apps.tanzu.vmware.com/v1alpha1
+kind: ClientRegistration
+metadata:
+  name: client-registration
+  namespace: appsso
+spec:
+  authServerSelector:
+    matchLabels:
+      name: authserver
+  clientAuthenticationMethod: client_secret_basic
+  requireUserConsent: false
+  authorizationGrantTypes:
+    - authorization_code
+  redirectURIs:
+    - http://127.0.0.1:8080
+    - http://127.0.0.1:8080/
+    - http://127.0.0.1
+    - http://127.0.0.1:80
+    - http://127.0.0.1:80/
+    - http://127.0.0.1:80/login/oauth2/code/sso
+    - http://profile-management.tap.test-api-curation.tapdemo.vmware.com
+    - http://profile-management.tap.test-api-curation.tapdemo.vmware.com/login/oauth2/code/sso
+    - https://oauth.pstmn.io/v1/callback  #! https://learning.postman.com/docs/sending-requests/authorization/#oauth-20
+  scopes:
+    - name: openid
+    - name: profile
+    - name: roles
+    - name: email
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: appsso
+  namespace: appsso
+spec:
+  selector:
+    app.kubernetes.io/part-of: authserver
+    app.kubernetes.io/component: authorization-server
+  ports:
+    - port: 80
+      targetPort: 8080

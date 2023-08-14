@@ -1,0 +1,44 @@
+apiVersion: "tanzu.vmware.com/v1"
+kind: SpringCloudGateway
+metadata:
+  name: profile-management
+  namespace: default
+spec:
+  sso:
+    secret: external-users-sso
+  api:
+    title: Profile Management
+    description: All the profiles in one place!
+    version: 1.2.3
+    groupId: profile-management
+    serverUrl: http://profile-management.tap.test-api-curation.tapdemo.vmware.com
+    cors:
+      allowedOrigins:
+        - "http://localhost:4333"
+        - "http://tap-gui.tap.test-api-curation.tapdemo.vmware.com"
+      allowedMethods:
+        - "GET"
+        - "PUT"
+        - "POST"
+      allowedHeaders:
+        - '*'
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: contour
+  name: profile-management
+  namespace: default
+spec:
+  rules:
+    - host: profile-management.tap.test-api-curation.tapdemo.vmware.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: profile-management
+                port:
+                  number: 80
