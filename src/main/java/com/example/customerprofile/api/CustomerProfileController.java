@@ -34,9 +34,7 @@ import jakarta.validation.Valid;
 @OpenAPIDefinition(
         info = @Info(
                 title = "Customer Profile Management API",
-                version = "1.0"),
-        tags = @Tag(
-                name = "Customer Profile REST API"))
+                version = "1.0"))
 @CrossOrigin
 @RestController
 @RequestMapping("/v1")

@@ -2,7 +2,7 @@ apiVersion: "tanzu.vmware.com/v1"
 kind: SpringCloudGateway
 metadata:
   name: profile-management
-  namespace: default
+  namespace: gateway
 spec:
   sso:
     secret: external-users-sso
@@ -16,6 +16,7 @@ spec:
       allowedOrigins:
         - "http://localhost:4333"
         - "http://tap-gui.tap.test-api-curation.tapdemo.vmware.com"
+        - "http://api-portal.tap.test-api-curation.tapdemo.vmware.com"
       allowedMethods:
         - "GET"
         - "PUT"
@@ -26,11 +27,10 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  annotations:
-    kubernetes.io/ingress.class: contour
   name: profile-management
-  namespace: default
+  namespace: gateway
 spec:
+  ingressClassName: contour
   rules:
     - host: profile-management.tap.test-api-curation.tapdemo.vmware.com
       http:
@@ -42,3 +42,32 @@ spec:
                 name: profile-management
                 port:
                   number: 80
+---
+apiVersion: sso.apps.tanzu.vmware.com/v1alpha1
+kind: ClientRegistration
+metadata:
+  name: external-users-sso
+  namespace: gateway
+spec:
+  authServerSelector:
+    matchLabels:
+      name: my-auth-server
+  clientAuthenticationMethod: client_secret_basic
+  requireUserConsent: false
+  authorizationGrantTypes:
+    - authorization_code
+  redirectURIs:
+    - http://127.0.0.1:8080
+    - http://127.0.0.1:8080/
+    - http://127.0.0.1
+    - http://127.0.0.1:80
+    - http://127.0.0.1:80/
+    - http://127.0.0.1:80/login/oauth2/code/sso
+    - http://profile-management.tap.test-api-curation.tapdemo.vmware.com
+    - http://profile-management.tap.test-api-curation.tapdemo.vmware.com/login/oauth2/code/sso
+    - https://oauth.pstmn.io/v1/callback  #! https://learning.postman.com/docs/sending-requests/authorization/#oauth-20
+  scopes:
+    - name: openid
+    - name: profile
+    - name: roles
+    - name: email

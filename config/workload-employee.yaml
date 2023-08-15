@@ -22,7 +22,7 @@ spec:
         type: openapi
         location:
           path: "/api-docs"
-        owner: customer-relations-department
+        owner: employee-relations-department
         system: profile-management
         description: Manage employee profiles
   source:

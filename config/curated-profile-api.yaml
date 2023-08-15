@@ -1,9 +1,15 @@
 ---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: curation
+
+---
 apiVersion: apis.apps.tanzu.vmware.com/v1alpha1
 kind: CuratedAPIDescriptor
 metadata:
-  name: petstore
-  namespace: test-e2e-curation
+  name: profile-management
+  namespace: curation
   annotations:
     "apis.apps.tanzu.vmware.com/route-provider": "spring-cloud-gateway"
 spec:
@@ -25,7 +31,37 @@ spec:
       namespace: my-apps
       pathPrefix: /employees
     - name: pet-profile
-      namespace: default
+      namespace: curation
+      pathPrefix: /pets
+
+---
+apiVersion: apis.apps.tanzu.vmware.com/v1alpha1
+kind: CuratedAPIDescriptor
+metadata:
+  name: profile-management
+  namespace: curation
+  annotations:
+    "apis.apps.tanzu.vmware.com/route-provider": "spring-cloud-gateway"
+spec:
+  title: Curated Petstore
+  description: A set of API endpoints to manage the resources within the petstore app.
+  documentation:
+    url: https://docs.example.com
+  type: openapi
+  groupId: profile-management
+  version: 1.2.4
+  apiDescriptors:
+    - name: customer-profile
+      namespace: my-apps
+      pathPrefix: /customers
+      routeConfig:
+        ssoEnabled: true
+        filters: ["TokenRelay", "RateLimit=2,10s"]
+    - name: employee-profile
+      namespace: my-apps
+      pathPrefix: /employees
+    - name: pet-profile
+      namespace: curation
       pathPrefix: /pets
 
 ---
@@ -33,11 +69,19 @@ apiVersion: apis.apps.tanzu.vmware.com/v1alpha1
 kind: APIDescriptor
 metadata:
   name: pet-profile
-  namespace: default
+  namespace: curation
 spec:
   type: openapi
+  owner: pet-relations-department
+  system: profile-management
+  description: Manage pet profiles
   location:
     apiSpec:
-      path: "/api/v3/openapi.json"
+      path: "/LittleBaiBai/22d992aa631c6b2cecc9b255cb1632f3/raw/ba630d4ee93ed2e3ae621c7a509010fd3736f4c1/sample-openapi.json"
+      url: https://gist.githubusercontent.com/
     server:
-      url: https://petstore3.swagger.io
+      ref:
+        apiVersion: serving.knative.dev/v1
+        kind: Service
+        name: customer-profile
+        namespace: my-apps
