@@ -109,6 +109,25 @@ curl -XPOST http://profile-management.$INGRESS_DOMAIN/employees/v1/ -H 'Content-
 curl http://profile-management.$INGRESS_DOMAIN/employees/v1/ 
 ```
 
+### Verify SCG filters
+
+Visit `http://profile-management.$INGRESS_DOMAIN/customers/v1` in browser and log in as `alice` with password `test`.
+
+Refresh the page multiple times and should get `429` from the rate limit filter.
+
 ### Check for spec update
 
-Commit some update about the endpoint and wait for supply chain to process the  
+Commit some update about the endpoint and wait for supply chain to deploy the new app. Then the updated spec should be picked up by the `APIDescriptor` then the `CuratedAPIDescriptor` eventually. 
+The resync time is default to be 5 minutes for each resource, but it can be configured by setting `api_auto_registration.sync_period` in values file to something shorter, e.g. 30s.  
+
+## Clean up the cluster
+
+```bash
+kubectl delete namespace curation
+kubectl delete namespace gateway
+kubectl delete -f config/sso-config.yaml
+tanzu apps workload delete -f config/workload-customer.yaml -y
+tanzu apps workload delete -f config/workload-employee.yaml -y
+tanzu service class-claim delete customer-database -y
+tanzu service class-claim delete employee-database -y
+```

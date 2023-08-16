@@ -12,6 +12,7 @@ metadata:
   name: my-token-verification-key
   namespace: appsso
 spec: { }
+
 ---
 apiVersion: sso.apps.tanzu.vmware.com/v1alpha1
 kind: AuthServer
