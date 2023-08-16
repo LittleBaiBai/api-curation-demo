@@ -37,7 +37,7 @@ import jakarta.validation.Valid;
                 version = "1.0"))
 @CrossOrigin
 @RestController
-@RequestMapping("/v1")
+@RequestMapping("/profiles")
 public class CustomerProfileController {
 
     private final CustomerProfileService service;

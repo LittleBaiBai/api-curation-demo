@@ -50,6 +50,7 @@ spec:
       path: "/LittleBaiBai/22d992aa631c6b2cecc9b255cb1632f3/raw/ba630d4ee93ed2e3ae621c7a509010fd3736f4c1/sample-openapi.json"
       url: https://gist.githubusercontent.com/
     server:
+#      url: https://my-app.on.tas
       ref:
         apiVersion: serving.knative.dev/v1
         kind: Service
