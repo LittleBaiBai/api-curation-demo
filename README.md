@@ -101,17 +101,17 @@ Visit `http://api-portal.$INGRESS_DOMAIN` to see the newly curated API.
 ### API calls to the curated API directly
 
 ```bash
-curl -XPOST http://profile-management.$INGRESS_DOMAIN/employees/v1/ -H 'Content-Type: application/json' -d '{
+curl -XPOST http://profile-management.$INGRESS_DOMAIN/employees/profiles/ -H 'Content-Type: application/json' -d '{
   "email": "a@b.c",
   "firstName": "Sponge",
   "lastName": "Bob"
 }'
-curl http://profile-management.$INGRESS_DOMAIN/employees/v1/ 
+curl http://profile-management.$INGRESS_DOMAIN/employees/profiles/ 
 ```
 
 ### Verify SCG filters
 
-Visit `http://profile-management.$INGRESS_DOMAIN/customers/v1` in browser and log in as `alice` with password `test`.
+Visit `http://profile-management.$INGRESS_DOMAIN/customers/profiles` in browser and log in as `alice` with password `test`.
 
 Refresh the page multiple times and should get `429` from the rate limit filter.
 
